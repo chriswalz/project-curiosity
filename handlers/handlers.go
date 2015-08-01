@@ -5,13 +5,13 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/simplq/handlers/validate"
 )
 
 func (m *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) { // use a swith statement instead?
+	fmt.Println("the address is:", r.URL.Path)
 	if false {
 	} else if pathMethod(w, r, "/", "GET", getIndex) {
 	} else if pathMethod(w, r, "/login", "GET", getLogin) {
@@ -44,25 +44,36 @@ func getLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func postLogin(w http.ResponseWriter, r *http.Request) { // submit login information
-	fmt.Println("parsing code")
 	r.ParseForm()
-
-	t, err := template.ParseFiles("web/home.html")
-	if err != nil {
-		fmt.Println("Login err template ", err)
+	if isValid := validateLogin(w, r); isValid {
+		t, err := template.ParseFiles("web/home.html")
+		if err != nil {
+			fmt.Println("Login err template ", err)
+		} else {
+			t.Execute(w, nil)
+		}
 	} else {
-		t.Execute(w, nil)
+		fmt.Errorf("wasnt valid")
+		t, err := template.ParseFiles("web/login.html")
+		if err != nil {
+			fmt.Println("Login err template ", err)
+		} else {
+			t.Execute(w, nil)
+		}
 	}
+
 }
 
 // ---- helper methods -------- //
-func validateLogin(w http.ResponseWriter, r *http.Request) {
+func validateLogin(w http.ResponseWriter, r *http.Request) bool {
 	email := r.Form.Get("email")
-	isEmail := validate.IsEmailAddress(r.Form.Get("email"))
+	isEmail := validate.IsEmailAddress(email)
 	password := r.Form.Get("password")
-	isPassword := validate.IsPassword(r.Form.Get("password"))
-	fmt.Fprintf(w, "Email: "+email+" "+strconv.FormatBool(isEmail)+"  Password:") // send data to client side
-	fmt.Fprintf(w, password+" "+strconv.FormatBool(isPassword))                   // send data to client side
+	isPassword := validate.IsPassword(password)
+	fmt.Println(isEmail, isPassword, "-------------")
+	return isEmail && isPassword
+	//fmt.Fprintf(w, "Email: "+email+" "+strconv.FormatBool(isEmail)+"  Password:") // send data to client side
+	//fmt.Fprintf(w, password+" "+strconv.FormatBool(isPassword))                   // send data to client side
 	//w.Write([]byte("aaa"))
 }
 

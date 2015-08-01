@@ -3,6 +3,8 @@ package main
 /*
 setting up documentation?
 testing?
+fix form validation
+add sessions/cookies, use gorilla
 */
 
 import (
