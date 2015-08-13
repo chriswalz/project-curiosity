@@ -7,8 +7,12 @@ import (
 	"net/http"
 	"strings"
 
+	"code.google.com/p/go-uuid/uuid"
+	"github.com/gorilla/sessions"
 	"github.com/simplq/handlers/validate"
 )
+
+var store = sessions.NewCookieStore(uuid.New())
 
 func (m *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) { // use a swith statement instead?
 	fmt.Println("the address is:", r.URL.Path)
@@ -37,8 +41,10 @@ func getIndex(w http.ResponseWriter, r *http.Request) {
 }
 func getLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("web/login.html")
+	// get cookie
+	//r.Cookie("username")
 	if err != nil {
-		fmt.Println("Login err template ", err)
+		//fmt.Println("Login err template ", err)
 	} else {
 		t.Execute(w, nil)
 	}
@@ -48,15 +54,19 @@ func postLogin(w http.ResponseWriter, r *http.Request) { // submit login informa
 	if isValid := validateLogin(w, r); isValid {
 		t, err := template.ParseFiles("web/home.html")
 		if err != nil {
-			fmt.Println("Login err template ", err)
+			//fmt.Println("(ignore if running a test) Login err template ", err)
 		} else {
+			// set cookie
+			// create session along with session id, include session id with cookie below
+			//http.SetCookie(w, &http.Cookie{Name: r.Form.Get("email"), Value: r.Form.Get("password"), Expires: time.Now().Add(30 * time.Minute)})
+			//http.SetCookie(w, &http.Cookie{Name: "simplqSessionId, uuid.Uuid(), Expires: time.Now().Add(30 * time.Minute)})
 			t.Execute(w, nil)
 		}
 	} else {
-		fmt.Errorf("wasnt valid")
+		fmt.Errorf("Invalid login")
 		t, err := template.ParseFiles("web/login.html")
 		if err != nil {
-			fmt.Println("Login err template ", err)
+			fmt.Println("(ignore if running a test) Login err template ", err)
 		} else {
 			t.Execute(w, nil)
 		}
@@ -70,7 +80,7 @@ func validateLogin(w http.ResponseWriter, r *http.Request) bool {
 	isEmail := validate.IsEmailAddress(email)
 	password := r.Form.Get("password")
 	isPassword := validate.IsPassword(password)
-	fmt.Println(isEmail, isPassword, "-------------")
+	//fmt.Println(isEmail, isPassword, "-------------")
 	return isEmail && isPassword
 	//fmt.Fprintf(w, "Email: "+email+" "+strconv.FormatBool(isEmail)+"  Password:") // send data to client side
 	//fmt.Fprintf(w, password+" "+strconv.FormatBool(isPassword))                   // send data to client side

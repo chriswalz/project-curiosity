@@ -2,7 +2,6 @@ package gotest
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -35,14 +34,14 @@ func TestPostLogin(t *testing.T) {
 
 // ----- Helper Functions ------ //
 func helpPostLogin(t *testing.T, h *handlers.Mux, path string) {
-	res, err := http.PostForm(addr+path,
+	_, err := http.PostForm(addr+path,
 		url.Values{"email": {"zlaw777@gmail.com"}, "password": {"EEUE12345"}})
 	if err != nil {
 		log.Fatal(err)
 	}
-	bs, _ := ioutil.ReadAll(res.Body)
-	tr := string(bs)
-	fmt.Println("Response:", tr)
+	/*	bs, _ := ioutil.ReadAll(res.Body)
+		tr := string(bs)
+		fmt.Println("Response:", tr) */
 	//fmt.Println(req)
 }
 func helpCreateRequest(t *testing.T, h *handlers.Mux, method string, path string) {
