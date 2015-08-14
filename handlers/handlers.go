@@ -7,12 +7,10 @@ import (
 	"net/http"
 	"strings"
 
-	"code.google.com/p/go-uuid/uuid"
-	"github.com/gorilla/sessions"
-	"github.com/simplq/handlers/validate"
+	"github.com/PROJECTS/simplq/handlers/validate"
 )
 
-var store = sessions.NewCookieStore(uuid.New())
+//var store = sessions.NewCookieStore(uuid.New())
 
 func (m *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) { // use a swith statement instead?
 	fmt.Println("the address is:", r.URL.Path)

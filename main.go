@@ -9,7 +9,7 @@ review duplicate submissions chapter
 */
 
 import (
-	"github.com/simplq/handlers"
+	"github.com/PROJECTS/simplq/handlers"
 )
 
 func main() {
