@@ -9,9 +9,15 @@ review duplicate submissions chapter
 */
 
 import (
-	"github.com/PROJECTS/simplq/handlers"
+	"os"
+
+	"github.com/simplq/handlers"
 )
 
 func main() {
-	handlers.ServeAndHandle("8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	handlers.ServeAndHandle(port)
 }

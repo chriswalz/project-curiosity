@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/PROJECTS/simplq/handlers/validate"
+	"github.com/simplq/handlers/validate"
 )
 
 //var store = sessions.NewCookieStore(uuid.New())
