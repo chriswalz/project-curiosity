@@ -11,7 +11,7 @@ review duplicate submissions chapter
 import (
 	"os"
 
-	"github.com/simplq/handlers"
+	"github.com/sim/handlers"
 )
 
 func main() {
